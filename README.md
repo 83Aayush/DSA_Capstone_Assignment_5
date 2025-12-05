@@ -1,117 +1,71 @@
-# 🏥 Hospital Appointment & Triage System
-### Capstone Assignment – Data Structures (Python Implementation)
+# Hospital Appointment & Triage System
 
-This project implements a **console-based Hospital OPD Management System** focused on Data Structures.  
-It simulates real-world hospital workflows: patient registration, doctor schedules, appointment queues, emergency triage, and undo operations.
+## Overview
+This Python project implements a **hospital appointment and triage system** with support for:
 
-The system integrates **multiple data structures**:
-- Circular Queue  
-- Min Heap (Priority Queue)  
-- Singly Linked List  
-- Stack (Undo Log)  
-- Hash Table (Patient Index)
+- Routine appointments
+- Emergency triage
+- Doctor schedule management
+- Undo functionality
+- Reporting and analytics
 
----
-
-## 📌 Features Implemented
-
-### ✅ 1. **Doctor Schedule Management (Linked List)**
-Each doctor has a linked list of:
-- `slotId`
-- `startTime`
-- `endTime`
-- `status` (AVAILABLE / BOOKED / CANCELLED)
-
-Supports:
-- Add Slot  
-- Cancel Slot  
-- Traverse Schedule  
-
-### ✅ 2. **Routine Appointment Queue (Circular Queue)**
-Used for normal OPD appointments.
-- `enqueueRoutine(token)`
-- `dequeueRoutine()`
-- Overflow & underflow handled
-
-### ✅ 3. **Emergency Triage (Min Heap / Priority Queue)**
-Emergency patients are prioritized based on:
-Implements:
-- Insert emergency case  
-- Extract-min (highest priority)  
-- Preemption over routine queue  
-
-### ✅ 4. **Patient Index (Hash Table with Chaining)**
-Stores:
-- patientId  
-- name  
-- age  
-- severity  
-- visit history  
-
-Supports CRUD:
-- insert
-- get
-- update
-- delete
-
-### ✅ 5. **Undo System (Stack)**
-Every update is logged as an `UndoAction` with:
-- `action_type`
-- `payload`
-- `revert_fn()`
-
-Supports:
-- Undo last operation safely  
-- Rollback queue changes, patient updates, slot changes, etc.
-
-### ✅ 6. **Reports**
-- Per doctor pending count  
-- Served vs pending summary  
-- Top-K most frequent patients  
+The system uses **queues, heaps, hash tables, and linked lists** to efficiently manage patients, doctors, and tokens.
 
 ---
 
-## 🧮 Data Structures Used
+## Features
 
-| Feature | Data Structure | Why |
-|--------|----------------|-----|
-| Routine Appointments | Circular Queue | O(1) enqueue/dequeue |
-| Emergency Triage | Min Heap | O(log n) insert/pop with priority |
-| Doctor Schedule | Singly Linked List | Dynamic slot additions |
-| Undo System | Stack | LIFO rollback |
-| Patient Index | Hash Table (Chaining) | Fast O(1) average CRUD |
+1. **Patient Management**
+   - Register or update patient details.
+   - Track patient history (appointments served and pending).
 
----
+2. **Doctor Management**
+   - Add doctors with their specialization.
+   - Maintain schedules (slots) for appointments.
+   - Track pending and served patients.
 
-## 🧠 Time & Space Complexity (Highlights)
+3. **Appointment Booking**
+   - Routine appointments via circular queues (FIFO).
+   - Emergency triage via priority queue (min-heap by severity).
 
-| Operation | Complexity |
-|----------|------------|
-| Queue Enqueue / Dequeue | **O(1)** |
-| Heap Insert / Extract | **O(log n)** |
-| Hash Table Search | **O(1)** Avg |
-| Linked List Insert | **O(1)** |
-| Undo Push/Pop | **O(1)** |
+4. **Undo Functionality**
+   - Undo the last action for slots, patient updates, bookings, or serving.
 
----
+5. **Reports**
+   - Doctor pending/served report.
+   - Overall served vs pending report.
+   - Top K frequent patients.
 
-## 📂 Project Structure
-
-
-Inside `hospital_system.py`:
-- `Patient`
-- `Doctor`
-- `Token`
-- `CircularQueue`
-- `EmergencyQueue`
-- `HashTable`
-- `UndoStack`
-- `HospitalSystem`
-- `demo()` test function
+6. **CLI & Demo**
+   - Command-line interface to interact with the system.
+   - Demo function to showcase system functionalities.
 
 ---
 
-## ▶️ Running the Demo
+## Data Structures Used
+
+- **CircularQueue** → For routine appointment queue.
+- **EmergencyQueue** (min-heap) → For emergency triage based on severity.
+- **HashTable with Chaining** → For patient indexing and quick retrieval.
+- **Linked List** → For doctor schedule slots.
+- **UndoStack** → For undoing actions in the system.
+
+---
+hs = HospitalSystem()
+hs.add_doctor(1, "Dr. Rao", "Cardiology", routine_capacity=5)
+hs.add_doctor(2, "Dr. Meena", "General", routine_capacity=5)
+
+p1 = Patient(1, "Amit", 30)
+p2 = Patient(2, "Sunita", 25)
+hs.patient_upsert(p1)
+hs.patient_upsert(p2)
+
+t1 = hs.book_routine(1, 1, slot_id=101)
+t2 = hs.book_routine(2, 2, slot_id=201)
+e1 = hs.triage_insert(2, severity_score=1, doctor_id=1)
+
+served = hs.serve_next(1)
+print("Served patient:", served)
 
 ```bash
-python3 hospital_system.py
+git clone <repository_url>
